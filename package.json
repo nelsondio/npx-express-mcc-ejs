@@ -1,0 +1,26 @@
+{
+  "name": "npx-express-myapp",
+  "version": "1.0.0",
+  "description": "Bare Bones to link to npx-express-mcc-ejs",
+  "author": "Nelson Lopez",
+  "keywords": [
+    "express nodejs ejs mcc edmonds "
+  ],
+  "license": "ISC",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nelsondio/npx-express-mcc-ejs"
+  },
+  "scripts": {
+    "start": "./bin/app",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "pino": "^7.0.3",
+    "pino-http": "^5.8.0",
+    "pino-pretty": "^7.1.0"
+  }
+}

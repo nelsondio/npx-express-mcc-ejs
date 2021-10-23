@@ -13,10 +13,12 @@
     "url": "https://github.com/nelsondio/npx-express-mcc-ejs"
   },
   "scripts": {
-    "start": "./bin/app",
+    "start": "nodemon --exec babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
@@ -25,5 +27,8 @@
     "pino": "^7.0.3",
     "pino-http": "^5.8.0",
     "pino-pretty": "^7.1.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.15.8"
   }
 }

@@ -1,6 +1,7 @@
+
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import 'dotenv/config';
 import { v4 as uuidv4 } from 'uuid';
 
 const port = process.env.PORT || 8888
@@ -11,7 +12,12 @@ const app = express()
 // Routes and middleware
 // app.use(/* ... */)
 //
-app.use(cors())
+app.use(express.json());
+app.use(cors());
+app.use(express.urlencoded({extended:true  }));
+app.use( (req, res, next) => {
+	req.me = users[1];
+});
 // app.get(/* ... */)
 
 let users = {
@@ -38,6 +44,9 @@ let messages = {
   },
 };
 
+app.get('/session', (req, res) => {
+	return res.send(users[req.me.id]);
+});
 app.get('/', (req, res) => {
    res.send('Received a GET HTTP method');
 })
@@ -64,7 +73,7 @@ app.get('/messages', (req, res) => {
      return res.send(Object.values(messages));
 })
 app.get('/messages/:messageId', (req, res) => {
-     return res.send(users[req.params.messageId]);
+     return res.send(messages[req.params.messageId]);
 })
 app.post('/users', (req, res) => {
    return res.send('Received a POST HTTP method on user resource');
@@ -74,16 +83,25 @@ app.post('/messages', (req, res) => {
 	const message = {
 		id,
 		text: req.body.text,
+		userId: req.me.id,
 	};
 	message[id] = message; //pseudodatabase
-	return res.send(message);
-})
+	return res.send(`messageId: ${message[id].text} ${message[id].id}`);
+});
 app.put('/users/:userId', (req, res) => {
    return res.send(`Received a PUT HTTP method on user/${req.params.userId} resource`);
 })
 app.delete('/users/:userId', (req, res) => {
    return res.send(`Received a DELETE HTTP method on user/${req.params.userId}`);
-})
+});
+app.delete('/messages/:messageId', (req, res) => {
+	const {
+		[req.params.messageId]: message,
+		... otherMessages
+	} = messages;
+	messages = otherMessages;
+	return res.send('deleted');
+
 // Error handlers
 app.use(function fourOhFourHandler (req, res) {
   res.status(404).send()

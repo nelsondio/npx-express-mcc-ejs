@@ -14,10 +14,29 @@ app.use(cors())
 // app.get(/* ... */)
 
 app.get('/', (req, res) => {
-   res.send(process.env.SECRET_KEY);
+   res.send('Received a GET HTTP method');
 })
-app.get('/', (req, res) => {
-	res.send('Hello World!')
+app.post('/', (req, res) => {
+   return res.send('Received a POST HTTP method');
+})
+app.put('/', (req, res) => {
+   return res.send('Received a PUT HTTP method');
+})
+app.delete('/', (req, res) => {
+   return res.send('Received a DELETE HTTP method');
+})
+
+app.get('/users', (req, res) => {
+   res.send('Received a GET HTTP method on user resource');
+})
+app.post('/users', (req, res) => {
+   return res.send('Received a POST HTTP method on user resource');
+})
+app.put('/users/:userId', (req, res) => {
+   return res.send(`Received a PUT HTTP method on user/${req.params.userId} resource`);
+})
+app.delete('/users/:userId', (req, res) => {
+   return res.send(`Received a DELETE HTTP method on user/${req.params.userId}`);
 })
 // Error handlers
 app.use(function fourOhFourHandler (req, res) {

@@ -84,7 +84,7 @@ app.delete('/messages/:messageId', (req, res) => {
 		... otherMessages
 	} = req.context.models.messages;
 	req.context.models.messages = otherMessages;
-	return res.send('deleted');
+	return res.send(`deleted: ${message}`);
 });
 // Error handlers
 app.use(function fourOhFourHandler (req, res) {

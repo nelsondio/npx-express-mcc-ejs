@@ -17,6 +17,20 @@ const app = express()
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({extended:true  }));
+
+
+// Custom Middleware 
+
+app.use(async (req, res, next) => {
+	req.context = {
+		models,
+		me: await models.User.findByLogin('rwieruch'),
+	};
+	next();
+});
+
+
+// * Routes * //
 app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
@@ -51,6 +65,7 @@ app.use(function fiveHundredHandler (err, req, res, next) {
 })
 
 // Start server
+/*
 connectDb().then(async() => {
 	app.listen(port, function (err) {
   		if (err) {
@@ -60,6 +75,22 @@ connectDb().then(async() => {
   		console.log(`Started at http://localhost:${port}`)
 	})
 });
+*/
+
+const eraseDbOnSync = true;
+connectDb().then(async () => {
+	if (eraseDbOnSync) {
+		await Promise.all([
+			models.User.deleteMany({}),
+			models.Message.deleteMany({}),
+			]);
+			createUserWithMessages();
+	}
+	app.listen(port, () => 
+		console.log(`Listening on port ${port}!`),
+	);
+});  // To reinitialize Db after rebooting express server
+
 
 const createUserWithMessages = async () => {
 	console.log(`create user1 and message1`);
@@ -74,18 +105,3 @@ const createUserWithMessages = async () => {
 	await user1.save();
 };
 
-
-/*
-const eraseDbOnSync = true;
-connectDb().then(async () => {
-	if (eraseDbOnSync) {
-		await Promise.all([
-			models.User.deleteMany({}),
-			models.Message.deleteMany({}),
-			]);
-	}
-	app.listen(port, () => {
-		console.log(`Listening on port ${port}!`);
-	});
-});  // To reinitialize Db after rebooting express server
-*/

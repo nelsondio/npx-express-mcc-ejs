@@ -4,7 +4,10 @@ import { Router } from 'express';
 const router = Router();
 
 router.get('/', (req, res) => {
-	return res.send(Object.values(req.context.models.Message));
+	console.log((req.context.models.Message));
+	console.log((req.context.models.User));
+//	return res.send(Object.values(req.context.models.Message));
+	return res.send("/messages GET route hit");
 });
 
 router.get('/:messageId', (req, res) => {

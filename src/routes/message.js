@@ -14,10 +14,15 @@ router.get('/:messageId', async (req, res) => {
 });
 
 router.post('/',  async (req, res) => {
-	const oneMessage = await req.context.models.Message.create({
-		text: req.body.text,
-		user: req.context.me.id,
-	});
+	let oneMessage;
+	try {
+		oneMessage = await req.context.models.Message.create({
+			text: req.body.text,
+			user: req.context.me.id,
+		});
+	} catch (error) {
+		return res.status(400).json({ error: error.toString() });
+	}
 	return res.send(oneMessage);
 });
 router.delete('/:messageId', async (req, res) => {

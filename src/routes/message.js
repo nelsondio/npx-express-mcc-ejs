@@ -3,14 +3,14 @@ import { BadRequestError } from '../utils/errors';
 
 const router = Router();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req, res, next) => {
 	const messages = await req.context.models.Message.find({}).catch(
 		(error) => next(new BadRequestError(error)),
 	);
 	return res.send(messages);
 });
 
-router.get('/:messageId', async (req, res) => {
+router.get('/:messageId', async (req, res, next) => {
 	const one = await req.context.models.Message.findById(req.params.messageId,)
 	.catch((error) => next(new BadRequestError(error)));
 	return res.send(one);
@@ -24,7 +24,7 @@ router.post('/',  async (req, res, next) => {
 	.catch ((error) => next(new BadRequestError(error))); 
 	return res.send(oneMessage);
 });
-router.delete('/:messageId', async (req, res) => {
+router.delete('/:messageId', async (req, res, next) => {
 	const one2delete = await req.context.models.Message.findById(
 		req.params.messageId,
 	)

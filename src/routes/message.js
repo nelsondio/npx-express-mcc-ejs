@@ -1,15 +1,18 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Router } from 'express';
+import { BadRequestError } from '../utils/errors';
 
 const router = Router();
 
 router.get('/', async (req, res) => {
-	const messages = await req.context.models.Message.find({});
+	const messages = await req.context.models.Message.find({}).catch(
+		(error) => next(new BadRequestError(error)),
+	);
 	return res.send(messages);
 });
 
 router.get('/:messageId', async (req, res) => {
-	const one = await req.context.models.Message.findById(req.params.messageId,);
+	const one = await req.context.models.Message.findById(req.params.messageId,)
+	.catch((error) => next(new BadRequestError(error)));
 	return res.send(one);
 });
 
@@ -18,16 +21,17 @@ router.post('/',  async (req, res, next) => {
 		text: req.body.text,
 		user: req.context.me.id,
 	})
-	.catch (next); 
+	.catch ((error) => next(new BadRequestError(error))); 
 	return res.send(oneMessage);
 });
 router.delete('/:messageId', async (req, res) => {
 	const one2delete = await req.context.models.Message.findById(
 		req.params.messageId,
-	);
+	)
+	.catch((error) => next(new BadRequestError(error)));
 	let result = null;
 	if (one2delete) {
-		result = await message.remove();
+		result = await one2delete.remove();
 	}
 	return res.send(result);
 });

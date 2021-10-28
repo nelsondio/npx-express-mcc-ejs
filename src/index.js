@@ -42,14 +42,25 @@ app.get('/some-new-route', function (req, res, next) {
 
 // * Generalize the redirect for all routes that are not matched by our API
 app.get('*', function (req, res, next) {
-	res.status(301).redirect('/not-found');
+	const error = new Error(
+		`${req.ip} tried to access ${req.originalUrl}`,
+	);
+	error.statusCode = 301;
+
+	next(error);
 });
 
 // * Unifier error handling instead of try/catch on every route * //
 // IMPORTANT to list error handling after REST API routes
 // error in API endpoints can be delegated to here error handling MIDDLEWARE
 app.use((error, req, res, next) => {
-	return res.status(500).json({ error: error.toString() });
+	if (!error.statusCode) error.statusCode = 500;
+	if (error.statusCode === 301) {
+		return res.status(301).redirect('/not-found');
+	}
+	return res
+		.status(error.statusCode)
+		.json({ error: error.toString() });
 });
 
 

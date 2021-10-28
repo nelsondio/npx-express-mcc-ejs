@@ -34,6 +34,15 @@ app.use(async (req, res, next) => {
 app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
+
+// * Unifier error handling instead of try/catch on every route * //
+// IMPORTANT to list error handling after REST API routes
+// error in API endpoints can be delegated to here error handling MIDDLEWARE
+app.use((error, req, res, next) => {
+	return res.status(500).json({ error: error.toString() });
+});
+
+
 // app.get(/* ... */)
 
 

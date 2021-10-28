@@ -13,16 +13,12 @@ router.get('/:messageId', async (req, res) => {
 	return res.send(one);
 });
 
-router.post('/',  async (req, res) => {
-	let oneMessage;
-	try {
-		oneMessage = await req.context.models.Message.create({
-			text: req.body.text,
-			user: req.context.me.id,
-		});
-	} catch (error) {
-		return res.status(400).json({ error: error.toString() });
-	}
+router.post('/',  async (req, res, next) => {
+	const oneMessage = await req.context.models.Message.create({
+		text: req.body.text,
+		user: req.context.me.id,
+	})
+	.catch (next); 
 	return res.send(oneMessage);
 });
 router.delete('/:messageId', async (req, res) => {

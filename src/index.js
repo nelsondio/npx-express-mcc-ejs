@@ -35,6 +35,16 @@ app.use('/session', routes.session);
 app.use('/users', routes.user);
 app.use('/messages', routes.message);
 
+// * a route not found in our API * //
+app.get('/some-new-route', function (req, res, next) {
+	res.status(301).redirect('/not-found');
+});
+
+// * Generalize the redirect for all routes that are not matched by our API
+app.get('*', function (req, res, next) {
+	res.status(301).redirect('/not-found');
+});
+
 // * Unifier error handling instead of try/catch on every route * //
 // IMPORTANT to list error handling after REST API routes
 // error in API endpoints can be delegated to here error handling MIDDLEWARE
